@@ -25,3 +25,18 @@ def taskList(request):
     tasks = Task.objects.all()                      # These are the tasks that exist
     serializer = TaskSerializer(tasks, many=True)   # This is the serializer defined in serializers.py
     return Response(serializer.data)                # This returns the data serialized on the above line
+
+@api_view(['GET'])
+def taskDetail(request, pk):
+    task = Task.objects.get(id=pk)
+    serializer = TaskSerializer(task, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def taskCreate(request):
+    serializer = TaskSerializer(data=request.data)  # Getting data from the API
+
+    if serializer.is_valid():                       # Making sure that the data is valid
+        serializer.save()                           # If so, save
+
+    return Response(serializer.data)
