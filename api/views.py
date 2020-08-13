@@ -35,8 +35,20 @@ def taskDetail(request, pk):
 @api_view(['POST'])
 def taskCreate(request):
     serializer = TaskSerializer(data=request.data)  # Getting data from the API
-
     if serializer.is_valid():                       # Making sure that the data is valid
         serializer.save()                           # If so, save
-
     return Response(serializer.data)
+
+@api_view(['POST'])
+def taskUpdate(request, pk):
+    task = Task.objects.get(id=pk)
+    serializer = TaskSerializer(instance=task, data=request.data) # This allows us to "get" and "post" at the same time
+    if serializer.is_valid():                       
+        serializer.save()                           
+    return Response(serializer.data)
+
+@api_view(['DELETE'])
+def taskDelete(request, pk):
+    task = Task.objects.get(id=pk)
+    task.delete()
+    return Response("Item Deleted Successfully")
